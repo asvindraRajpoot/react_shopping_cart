@@ -1,18 +1,15 @@
 import React from "react";
 import OrderBy from "./OrderBy";
+import { connect } from 'react-redux';
 
-class Products extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedOrder: "",
-    };
-  }
-  handleOrderBy = (event) => {
-    this.setState({ selectedOrder: event.target.value });
-  };
 
-  handleOrderProducts = (order, products) => {
+function Products(props) {
+  console.log(props, 'inside products props');
+
+  let selectedOrder = props.products.selectedOrder;
+
+
+  function handleOrderProducts(order, products) {
     let sortedProducts = [...products];
     if (order === "highest") {
       sortedProducts = sortedProducts.sort((a, b) => b.price - a.price);
@@ -23,32 +20,32 @@ class Products extends React.Component {
     return sortedProducts;
   };
 
-  render() {
-    let { selectedOrder } = this.state;
-    let products = this.handleOrderProducts(selectedOrder, this.props.data);
 
-    return (
-      <div>
-        <div className="products-filter">
-          <p>
-            {`${this.props.data.length} Product${
-              this.props.data.length > 1 ? "s" : ""
+
+  let products = handleOrderProducts(selectedOrder, props.data);
+
+
+
+
+  return (
+    <div>
+      <div className="products-filter">
+        <p>
+          {`${props.data.length} Product${props.data.length > 1 ? "s" : ""
             } found.`}{" "}
-          </p>
-          <OrderBy
-            selectedOrder={selectedOrder}
-            handleOrderBy={this.handleOrderBy}
-          />
-        </div>
-        <div className="flex wrap">
-          {products.map((product) => (
-            <Product {...product} />
-          ))}
-        </div>
+        </p>
+        <OrderBy
+        />
       </div>
-    );
-  }
+      <div className="flex wrap">
+        {products.map((product, i) => (
+          <Product key={i} {...product} />
+        ))}
+      </div>
+    </div>
+  );
 }
+
 
 function Product(props) {
   return (
@@ -70,4 +67,13 @@ function Product(props) {
     </div>
   );
 }
-export default Products;
+export default connect((state) => {
+  return {
+    products: {
+      selectedOrder: state.products.selectedOrder
+
+
+
+    }
+  }
+})(Products);

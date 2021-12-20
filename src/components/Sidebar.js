@@ -1,3 +1,5 @@
+import React from "react";
+
 function Sidebar({ products }) {
   let sizes = products.reduce((acc, cv) => {
     acc = acc.concat(cv.availableSizes);
@@ -7,8 +9,8 @@ function Sidebar({ products }) {
   return (
     <aside className="flex-20 sidebar">
       <div className="flex wrap">
-        {uniqueSizes.map((size) => (
-          <span className="size">{size}</span>
+        {uniqueSizes.map((size,i) => (
+          <span className="size" key={i}>{size}</span>
         ))}
       </div>
     </aside>
